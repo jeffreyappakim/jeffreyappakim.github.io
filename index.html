@@ -173,9 +173,9 @@ main,footer{position:relative;z-index:1}
   transition:padding-left .25s, background .25s;
 }
 .idx:hover{padding-left:18px;background:rgba(47,169,125,.045)}
-.idx .code{font-family:'Albert Sans',sans-serif;font-size:11.5px;font-weight:600;color:var(--accent);letter-spacing:.24em}
-.idx .name{font-family:'Gloock',serif;font-weight:400;font-size:clamp(24px,3.2vw,38px);line-height:1.02;color:var(--bone)}
-.idx .count{font-family:'Albert Sans',sans-serif;font-size:12px;color:var(--fog);letter-spacing:.2em;text-transform:uppercase}
+.idx .code{font-family:'Albert Sans',sans-serif;font-size:12.5px;font-weight:600;color:var(--accent);letter-spacing:.24em}
+.idx .name{font-family:'Gloock',serif;font-weight:400;font-size:clamp(28px,3.7vw,45px);line-height:1.04;color:var(--bone);-webkit-text-stroke:.5px currentColor}
+.idx .count{font-family:'Albert Sans',sans-serif;font-size:13px;font-weight:600;color:var(--fog);letter-spacing:.18em;text-transform:uppercase}
 .idx .arrow{color:var(--mist);transition:transform .25s,color .25s;font-family:'Albert Sans',sans-serif}
 .idx:hover .arrow{transform:translateX(7px);color:var(--accent)}
 
@@ -561,7 +561,7 @@ const CONTENT = {
 
   footer: {
     left: "© 2026 Jeffrey Kim — a capsule, built by hand.",
-    right: "Capsule v4.2 — daybreak ridge"
+    right: "Capsule v4.4 — daybreak ridge"
   }
 };
 
@@ -619,23 +619,36 @@ const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-mo
     }
   }
   // fog bank: a feathered clearing painted under the drawer index (measured from layout)
-  let fogRect=null;
+  let fogRects=[];
   setInterval(()=>{
-    const n=document.querySelector("#cover .index");
-    fogRect = n ? n.getBoundingClientRect() : null;
+    const rows=document.querySelectorAll("#cover .index-head, #cover .idx");
+    fogRects=[...rows].map(n=>n.getBoundingClientRect());
   },400);
-  function drawFog(){
-    if(!fogRect || fogRect.bottom<0 || fogRect.top>innerHeight) return;
-    const cx=(fogRect.left+fogRect.width/2)*dpr, cy=(fogRect.top+fogRect.height/2)*dpr;
-    const rx=fogRect.width*0.62*dpr, ry=fogRect.height*0.85*dpr;
-    ctx.save();
-    ctx.translate(cx,cy); ctx.scale(1,ry/rx);
-    const g=ctx.createRadialGradient(0,0,rx*0.3,0,0,rx);
-    g.addColorStop(0,"rgba(247,249,243,.85)");
-    g.addColorStop(.7,"rgba(247,249,243,.55)");
+  function blob(cx,cy,rx,ry,alpha,inner){
+    ctx.save(); ctx.translate(cx,cy); ctx.scale(1,ry/rx);
+    const g=ctx.createRadialGradient(0,0,rx*inner,0,0,rx);
+    g.addColorStop(0,`rgba(247,249,243,${alpha.toFixed(3)})`);
     g.addColorStop(1,"rgba(247,249,243,0)");
     ctx.fillStyle=g; ctx.fillRect(-rx,-rx,rx*2,rx*2);
     ctx.restore();
+  }
+  function drawFog(t){
+    for(const r of fogRects){
+      if(r.bottom<0 || r.top>innerHeight) continue;
+      const cx=(r.left+r.width/2)*dpr, cy=(r.top+r.height/2)*dpr;
+      const rx=r.width*0.60*dpr, ry=Math.max(r.height*0.66,24)*dpr;
+      blob(cx,cy,rx,ry,0.62,0.32);                       // base veil: legibility floor
+      const seed=r.top*0.013;                            // each row's mist moves differently
+      for(let i=0;i<5;i++){
+        const ph=seed+i*1.7;
+        const px=(r.left+r.width*(0.12+0.19*i))*dpr + Math.sin(t*0.00018+ph)*r.width*0.05*dpr;
+        const py=cy + Math.sin(t*0.00027+ph*1.3)*ry*0.35;
+        const prx=rx*(0.17+0.06*Math.sin(t*0.00022+ph*2));
+        const pry=ry*(0.75+0.25*Math.sin(t*0.0003+ph));
+        const a=0.15+0.11*(0.5+0.5*Math.sin(t*0.00025+ph*1.9));
+        blob(px,py,Math.max(prx,8*dpr),Math.max(pry,8*dpr),a,0.15);
+      }
+    }
   }
   const BIRDS=Array.from({length:4},(_,i)=>({
     x:Math.random(), y:0.13+Math.random()*0.24, sp:0.008+Math.random()*0.012, sz:5+Math.random()*4, ph:Math.random()*6.28
@@ -658,7 +671,7 @@ const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-mo
       ctx.fillStyle=L.c; ctx.fill();
       drawHerd(li,time,par);          // residents stand on their own ridge; nearer ridges pass in front
     });
-    drawFog();
+    drawFog(t);
     // birds — small distant arcs gliding through the sky
     ctx.strokeStyle="rgba(58,78,64,.55)"; ctx.lineWidth=1.1*dpr; ctx.lineCap="round";
     for(const b of BIRDS){
@@ -672,7 +685,7 @@ const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-mo
     }
   }
   if(reduceMotion){
-    setTimeout(()=>{ const n=document.querySelector("#cover .index"); fogRect=n?n.getBoundingClientRect():null; frame(9000); },650);
+    setTimeout(()=>{ const rows=document.querySelectorAll("#cover .index-head, #cover .idx"); fogRects=[...rows].map(n=>n.getBoundingClientRect()); frame(9000); },650);
     frame(9000); return;
   }
   let raf;
