@@ -152,7 +152,7 @@ main,footer{position:relative;z-index:1}
   margin:auto 0 10px;padding-top:36px;user-select:none;color:var(--bone);
 }
 .bigname .ln{display:block}
-.bigname .ch{display:inline-block;transition:transform .4s cubic-bezier(.2,.8,.2,1), color .4s;will-change:transform}
+.bigname .ch{display:inline-block;transition:transform .25s cubic-bezier(.2,.8,.2,1), color .3s;will-change:transform}
 .bigname .ch:hover{color:var(--accent)}
 .roleline{
   font-family:'Fraunces',serif;font-style:italic;font-weight:300;
@@ -162,13 +162,7 @@ main,footer{position:relative;z-index:1}
 .coverbio{max-width:560px;font-size:19px;color:var(--fog);margin-bottom:46px;font-weight:300}
 .coverbio .hi{font-family:'Fraunces',serif;font-style:italic;color:var(--bone)}
 
-.index{
-  background:rgba(250,251,246,.88);backdrop-filter:blur(8px);
-  border:1px solid var(--line-soft);border-radius:5px;
-  padding:4px 24px 8px;margin-bottom:40px;
-  box-shadow:0 10px 34px rgba(30,50,40,.10);
-}
-.idx:last-child{border-bottom:none}
+.index{border-top:1px solid var(--line-soft);margin-bottom:40px}
 .index-head{
   font-family:'Albert Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.3em;
   color:var(--accent);text-transform:uppercase;padding:16px 2px 6px;
@@ -567,7 +561,7 @@ const CONTENT = {
 
   footer: {
     left: "© 2026 Jeffrey Kim — a capsule, built by hand.",
-    right: "Capsule v4.1 — daybreak ridge"
+    right: "Capsule v4.2 — daybreak ridge"
   }
 };
 
@@ -624,6 +618,25 @@ const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-mo
       ctx.restore();
     }
   }
+  // fog bank: a feathered clearing painted under the drawer index (measured from layout)
+  let fogRect=null;
+  setInterval(()=>{
+    const n=document.querySelector("#cover .index");
+    fogRect = n ? n.getBoundingClientRect() : null;
+  },400);
+  function drawFog(){
+    if(!fogRect || fogRect.bottom<0 || fogRect.top>innerHeight) return;
+    const cx=(fogRect.left+fogRect.width/2)*dpr, cy=(fogRect.top+fogRect.height/2)*dpr;
+    const rx=fogRect.width*0.62*dpr, ry=fogRect.height*0.85*dpr;
+    ctx.save();
+    ctx.translate(cx,cy); ctx.scale(1,ry/rx);
+    const g=ctx.createRadialGradient(0,0,rx*0.3,0,0,rx);
+    g.addColorStop(0,"rgba(247,249,243,.85)");
+    g.addColorStop(.7,"rgba(247,249,243,.55)");
+    g.addColorStop(1,"rgba(247,249,243,0)");
+    ctx.fillStyle=g; ctx.fillRect(-rx,-rx,rx*2,rx*2);
+    ctx.restore();
+  }
   const BIRDS=Array.from({length:4},(_,i)=>({
     x:Math.random(), y:0.13+Math.random()*0.24, sp:0.008+Math.random()*0.012, sz:5+Math.random()*4, ph:Math.random()*6.28
   }));
@@ -636,7 +649,7 @@ const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-mo
     LAYERS.forEach((L,li)=>{
       const par=sc*(0.03+li*0.045);            // deeper layers drift more with scroll
       ctx.beginPath(); ctx.moveTo(0,H);
-      for(let x=0;x<=W;x+=8*dpr){
+      for(let x=0;x<=W;x+=10*dpr){
         const u=x/W*6.283;
         const y=H*L.y - par +(Math.sin(u*1.7+time*L.s)+0.55*Math.sin(u*3.9+time*L.s*0.6+2)+0.3*Math.sin(u*8.1+1))*H*L.a*0.35;
         ctx.lineTo(x,y);
@@ -645,6 +658,7 @@ const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-mo
       ctx.fillStyle=L.c; ctx.fill();
       drawHerd(li,time,par);          // residents stand on their own ridge; nearer ridges pass in front
     });
+    drawFog();
     // birds — small distant arcs gliding through the sky
     ctx.strokeStyle="rgba(58,78,64,.55)"; ctx.lineWidth=1.1*dpr; ctx.lineCap="round";
     for(const b of BIRDS){
@@ -657,7 +671,10 @@ const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-mo
       ctx.stroke();
     }
   }
-  if(reduceMotion){ frame(9000); return; }
+  if(reduceMotion){
+    setTimeout(()=>{ const n=document.querySelector("#cover .index"); fogRect=n?n.getBoundingClientRect():null; frame(9000); },650);
+    frame(9000); return;
+  }
   let raf;
   function loop(t){ frame(t); raf=requestAnimationFrame(loop); }
   raf=requestAnimationFrame(loop);
@@ -829,16 +846,29 @@ function renderCover(){
 
   if(!reduceMotion){
     const chars=[...name.querySelectorAll(".ch")];
-    name.addEventListener("mousemove",e=>{
-      chars.forEach(ch=>{
-        const r=ch.getBoundingClientRect();
-        const dx=e.clientX-(r.left+r.width/2), dy=e.clientY-(r.top+r.height/2);
-        const dist=Math.hypot(dx,dy), max=180;
-        if(dist<max){ const f=(1-dist/max)*26; ch.style.transform=`translate(${-dx/dist*f}px,${-dy/dist*f}px) rotate(${(dx>0?-1:1)*f*0.25}deg)`; }
-        else ch.style.transform="";
+    let centers=[], px=0, py=0, over=false, pending=0;
+    function measure(){                        // measure once, with transforms cleared
+      chars.forEach(c=>c.style.transform="");
+      requestAnimationFrame(()=>{
+        centers=chars.map(ch=>{ const r=ch.getBoundingClientRect(); return {x:r.left+r.width/2, y:r.top+r.height/2}; });
       });
-    });
-    name.addEventListener("mouseleave",()=>chars.forEach(ch=>ch.style.transform=""));
+    }
+    setTimeout(measure, 950);                  // after the entrance animation settles
+    window.__nameMeasure && window.removeEventListener("resize", window.__nameMeasure);
+    window.__nameMeasure = measure;
+    window.addEventListener("resize", measure);
+    function apply(){
+      pending=0;
+      for(let i=0;i<chars.length;i++){
+        const c=centers[i];
+        if(!c || !over){ chars[i].style.transform=""; continue; }
+        const dx=px-c.x, dy=py-c.y, dist=Math.hypot(dx,dy)||1, max=180;
+        if(dist<max){ const f=(1-dist/max)*26; chars[i].style.transform=`translate(${-dx/dist*f}px,${-dy/dist*f}px) rotate(${(dx>0?-1:1)*f*0.25}deg)`; }
+        else chars[i].style.transform="";
+      }
+    }
+    name.addEventListener("mousemove",e=>{ px=e.clientX; py=e.clientY; over=true; if(!pending) pending=requestAnimationFrame(apply); });
+    name.addEventListener("mouseleave",()=>{ over=false; if(!pending) pending=requestAnimationFrame(apply); });
     let i=0; const rc=role.querySelector("#rolecycle");
     window.__roleTimer && clearInterval(window.__roleTimer);
     window.__roleTimer=setInterval(()=>{ i=(i+1)%CONTENT.cover.roles.length; rc.textContent=CONTENT.cover.roles[i]; },1800);
