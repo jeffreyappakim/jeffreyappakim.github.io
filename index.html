@@ -122,7 +122,7 @@ main,footer{position:relative;z-index:1}
   padding:16px 30px;border-bottom:1px solid var(--line-soft);
   background:rgba(250,251,248,.8);backdrop-filter:blur(10px);
 }
-#topnav .brand{font-family:'Fraunces',serif;font-size:15px;font-style:italic;color:var(--bone);margin-right:auto;letter-spacing:.02em}
+#topnav .brand{font-family:'Albert Sans',sans-serif;font-size:12px;font-weight:700;color:var(--bone);margin-right:auto;letter-spacing:.42em}
 #topnav .brand b{color:var(--accent);font-weight:400}
 .navlink{
   font-family:'Albert Sans',sans-serif;font-size:11.5px;font-weight:500;letter-spacing:.2em;
@@ -369,7 +369,7 @@ const CONTENT = {
     manifestRight: "SEALED: NEVER · UPDATED: OFTEN · NEW YORK, NY",
     nameLines: ["JEFFREY", "KIM"],
     roles: ["building", "music", "daniel caesar", "incline bench", "stocks", "pokemon cards", "poker", "crosswords", "volleyball", "poetry", "appa"],
-    bio: `<span class="hi">Hello everyone, welcome to my website.</span> Shoutout to my parents, my friends, and Fable 5. I hope you enjoy this capsule, where I plan to archive everything notable to me.`,
+    bio: `<span class="hi">Hello everyone, welcome to my website.</span> I would like to thank my mom, my dad, and Claude AI. I hope you enjoy, and please feel free to reach out!`,
     indexHead: "CAPSULE INDEX — SELECT A DRAWER"
   },
 
@@ -386,18 +386,7 @@ const CONTENT = {
     intro: "the non-resume part.",
     portrait: IMG_PORTRAIT,
     chapters: [
-      {
-        head: "hello", tag: "the short version",
-        body: "Hi, I’m Jeffrey Kim, a sophomore at Columbia University. I was born in Seoul, South Korea, grew up in Troy, Michigan, and now I live in New York City. I enjoy philosophy and thinking, playing spikeball, and hunting down new food spots. I built this capsule as a place to keep the things I make and stick with — something I can look at all the time felt like a venture worth committing to."
-      },
-      {
-        head: "what I’m good at", tag: "the honest version",
-        body: "I think my two real strengths are working with numbers in my head and talking to people. Conversation is my greatest asset — if you can make someone like you, you can do just about anything. That combination is exactly why finance pulls me in: it rewards quick thinking and mathematical instinct while running on personal connection. I genuinely enjoy building in Excel and seeing how many shortcuts I can chain together in a few seconds."
-      },
-      {
-        head: "what I’m working on", tag: "the direction",
-        body: "I’ve started a lot of things over the years — the gym, the guitar, a high-school nonprofit — and what I’m focused on now is depth over ignition: seeing the things I care about all the way through. This site is part of that. It’s where the finance work, the writing, and the pursuits all live in one place, updated as they happen."
-      }
+      { head: "hello", tag: "in my own words", body: "Hi, I’m Jeffrey Kim, a Sophomore at Columbia University studying Applied Mathematics, Economics, and Computer Science (aka the big 3). I was born in Seoul, South Korea, grew up in Troy, Michigan, and now I work and go to school in New York City.\n\nI created this website because I wanted something more tangible to motivate me throughout the summer, and because my company’s Claude plan has Fable 5. Don’t worry, I made this on my own time. I would never use work hours to do anything other than maximize shareholder value.\n\nI really want to create more coding-based projects, build more financial models, and do anything that vaguely interests me while setting me up for success.\n\nI’ve always tried to begin projects or pursuits, whether that be going to the gym to picking up the guitar to founding a highschool nonprofit just like everyone else. But I lowkey just think that I’m pretty lazy. I just rely on my ability to retain stuff to get by in my classes, and I think I’m something akin to lost potential. So I thought, might as well make this and stick with it, because something I can look at all the time is definitely a worthwhile venture.\n\nI enjoy philosophy and thinking and playing spikeball and trying new food spots and all that.\n\nI think my greatest strengths are how I can work with numbers in my head, which stems from a typical asian-american upbringing, and how I can talk to people and make new friends. Conversation, I think, is my greatest asset. If you can make someone like you, you can do anything.\n\nSo that’s why I’m interested in finance, because the industry of finance is really a ring of personal connection that somewhat values quicker thinkers and mathematical prowess. I think it suits what I’m good at, and I honestly enjoy Excel and seeing how quickly I can CtrlA AltHFA AltHFT." }
     ],
     log: {
       head: "log",
@@ -483,6 +472,8 @@ const CONTENT = {
       }
     ],
     projects: [
+      { ws:"Independent · Valuation", title:"Samsara (NASDAQ: IOT) — Full DCF", desc:"Customer-segment revenue build (>$100K ARR, $5–100K ARR, and core cohorts with net adds and ARR-per-customer drivers) flowing into a complete operating model with working-capital schedules, CAPM-based WACC, and a DCF with exit-multiple terminal value bridging to implied share price and upside. Linked IS / BS / CFS.", stack:["Excel","DCF","Revenue build","WACC"], url:"SamsaraDCF-Jeffrey_Kim.xlsx", linkText:"Download the model ⤓" },
+      { ws:"Independent · Valuation", title:"Palantir (NYSE: PLTR) — Street-Based DCF", desc:"Situation overview with bull and bear cases, street-based DCF with live assumption switches on WACC and terminal growth, mid-year convention, and a full treasury-stock-method diluted share count (options, RSUs, PSUs). Annual and quarterly IS / CFS behind it.", stack:["Excel","DCF","Diluted shares","Sensitivity"], url:"Palantir_DCF_-_Jeffrey_Kim.xlsx", linkText:"Download the model ⤓" },
       { ws:"M&A Sourcing", title:"Acquisition Pipeline CRM", desc:"React deal-tracking dashboard: seven stages from Sourced to Closed/Won, activity logging, next-step due dates, staleness alerts, JSON export/import.", stack:["React","State design","UX"] },
       { ws:"M&A Sourcing", title:"Outreach Enrichment Stack", desc:"Clay → Smartlead pipeline: enrichment waterfalls, AI-agent prompts with strict no-guessing rules for contact data, campaign segmentation, full sending-domain authentication.", stack:["Clay","Smartlead","Prompt design","Email infra"] },
       { ws:"Grants", title:"Grant & RFP Tracker + Memo Series", desc:"Excel tracker seeded with 40+ verified opportunities, a standardized opportunity-memo format, and a 27-portal daily monitoring checklist.", stack:["Excel","Research","Writing"] },
@@ -506,7 +497,7 @@ const CONTENT = {
   writing: {
     stage: "No. 03",
     title: "writing.",
-    intro: "i write to figure out what i think. markets and research up front; the essays and poems that keep me honest below.",
+    intro: "I like to write.",
     finance: [
       {code:"FIN 001", title:"All In: A Technological Trade War",
         context:"Economics feature \u00b7 Harvard International Review", year:"2023", award:"",
@@ -576,7 +567,7 @@ const CONTENT = {
 
   footer: {
     left: "© 2026 Jeffrey Kim — a capsule, built by hand.",
-    right: "Capsule v4.8 — daybreak ridge"
+    right: "Capsule v4.9 — daybreak ridge"
   }
 };
 
@@ -816,7 +807,7 @@ function sampleTag(){return `<span class="sample">SAMPLE</span> `}
 function renderNav(route){
   const nav=document.getElementById("topnav");
   nav.innerHTML="";
-  const brand=el("a","brand",`Jeffrey <b>Kim</b>`); brand.href="#home";
+  const brand=el("a","brand",`<b>CAPSULE</b>`); brand.href="#home";
   nav.appendChild(brand);
   const links=[{id:"home",label:"cover."},...CONTENT.tabs.map(t=>({id:t.id,label:t.name}))];
   links.forEach(l=>{
@@ -912,7 +903,9 @@ function renderAbout(){
   const left=el("div");
   a.chapters.forEach(ch=>{
     left.appendChild(subhead(ch.head,ch.tag));
-    left.appendChild(el("p","prose",(ch.prompt?sampleTag():"")+esc(ch.body)));
+    ch.body.split(/\n\n+/).forEach((para,pi)=>{
+      left.appendChild(el("p","prose",(pi===0&&ch.prompt?sampleTag():"")+esc(para)));
+    });
   });
   const right=el("div");
   if(a.portrait){
@@ -951,6 +944,24 @@ function renderWork(){
   const w=CONTENT.work, p=el("div","page");
   p.appendChild(secHead(w.stage,w.title));
   p.appendChild(el("p","sec-intro",esc(w.intro)));
+  p.appendChild(subhead("Selected builds","Models & shipped work"));
+  const grid=el("div","grid");
+  w.projects.forEach(it=>{
+    const c=el("article","card");
+    c.appendChild(el("span","ws",esc(it.ws)));
+    c.appendChild(el("h3",null,esc(it.title)));
+    c.appendChild(el("p",null,esc(it.desc)));
+    const st=el("div","stack"); (it.stack||[]).forEach(t=>st.appendChild(el("span",null,esc(t)))); c.appendChild(st);
+    if(it.url){
+      const a=el("a","readbtn",esc(it.linkText||"Open ↗"));
+      a.href=it.url; if(/^https?:/.test(it.url)){a.target="_blank";a.rel="noopener";} else {a.setAttribute("download","");}
+      a.style.marginTop="14px"; a.style.display="inline-block";
+      c.appendChild(a);
+    }
+    grid.appendChild(c);
+  });
+  p.appendChild(grid);
+  p.appendChild(subhead("Experience","The record"));
   w.roles.forEach(r=>{
     const card=el("article","role"); card.dataset.idx=r.idx;
     const top=el("div","role-top");
@@ -961,17 +972,6 @@ function renderWork(){
     const ul=el("ul"); r.bullets.forEach(b=>ul.appendChild(el("li",null,esc(b)))); card.appendChild(ul);
     p.appendChild(card);
   });
-  p.appendChild(subhead("Selected builds","Shipped work"));
-  const grid=el("div","grid");
-  w.projects.forEach(it=>{
-    const c=el("article","card");
-    c.appendChild(el("span","ws",esc(it.ws)));
-    c.appendChild(el("h3",null,esc(it.title)));
-    c.appendChild(el("p",null,esc(it.desc)));
-    const st=el("div","stack"); (it.stack||[]).forEach(t=>st.appendChild(el("span",null,esc(t)))); c.appendChild(st);
-    grid.appendChild(c);
-  });
-  p.appendChild(grid);
   p.appendChild(subhead("Toolkit","What I work with"));
   const tools=el("div","tools");
   w.toolkit.forEach(col=>{
